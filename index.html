@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PC Diagnose</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f4f7fb;color:#172033;line-height:1.5}
+header{background:#0b1736;color:white;padding:18px 6%;position:sticky;top:0;z-index:5;box-shadow:0 3px 12px #0002}
+.nav{max-width:1150px;margin:auto;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:12px}.logo b{font-size:21px}.logo small{display:block;color:#b8c7e8}
+nav{display:flex;gap:22px}nav a{color:white;text-decoration:none}
+.hero{background:linear-gradient(135deg,#0b1736,#1769e0);color:white;padding:70px 6%}
+.hero-in{max-width:1150px;margin:auto;display:grid;grid-template-columns:1.5fr .7fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(36px,6vw,60px);line-height:1.05;margin-bottom:18px}.hero h1 span{color:#80b7ff}
+.hero p{font-size:18px;color:#dce9ff;max-width:720px;margin-bottom:25px}
+.btn{border:0;border-radius:9px;padding:13px 20px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-block}
+.primary{background:white;color:#1557c0}.blue{background:#1769e0;color:white}.red{background:#dc3030;color:white}
+.monitor{background:#FFFFFF18;border:1px solid #FFFFFF33;border-radius:25px;padding:35px;text-align:center}.monitor div{font-size:85px}
+section{padding:65px 6%}.container{max-width:1150px;margin:auto}
+.title{text-align:center;margin-bottom:35px}.title h2{font-size:32px;margin-bottom:8px}.title p{color:#69758b}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:25px}.card,.search{background:white;border:1px solid #e1e7f0;border-radius:18px;padding:28px;box-shadow:0 8px 25px #1020400b}
+.icon{font-size:40px;margin-bottom:10px}.card h3{font-size:23px;margin-bottom:8px}.card p{color:#69758b;margin-bottom:20px}
+.search{margin-top:25px}.form{display:flex;gap:10px}.form input{flex:1;padding:14px;border:1px solid #ccd5e3;border-radius:9px;font-size:16px;outline:none}.form input:focus{border-color:#1769e0}
+.quick{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}.quick button{border:1px solid #d5ddea;background:#f4f7fb;padding:8px 12px;border-radius:7px;cursor:pointer}
+.result{display:none;margin-top:25px;border:1px solid #dce4ef;border-radius:13px;overflow:hidden}.rhead{background:#f0f4fa;padding:17px 20px;display:flex;justify-content:space-between}.rbody{padding:20px}.tag{padding:5px 10px;border-radius:20px;background:#fff0c7;color:#875d00;font-size:12px;font-weight:bold}.solution{background:#edf5ff;border-left:4px solid #1769e0;padding:15px;margin-top:15px}.solution ul{padding-left:20px}
+.dark{background:#0e1729;color:#edf3ff}.dark .card,.dark .search{background:#18243a;border-color:#2d3a52}.dark .title p,.dark .card p{color:#aebbd0}.dark .form input{background:#101a2d;color:white;border-color:#3b4962}.dark .quick button{background:#101a2d;color:white;border-color:#3b4962}.dark .result{border-color:#33425b}.dark .rhead{background:#111d31}.dark .solution{background:#122746;color:#dceaff}
+.table-wrap{overflow:auto}.database{background:#0b1736;color:white}.database .title p{color:#aebbd0}table{width:100%;border-collapse:collapse;background:#14213d;border-radius:12px;overflow:hidden}th,td{text-align:left;padding:14px;border-bottom:1px solid #2d3b58}th{color:#9cc5ff}.badge{padding:4px 8px;border-radius:5px;font-size:12px}.bios{background:#173b76}.bsod{background:#6d2020}
+.info{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.info .card{box-shadow:none}.num{font-size:35px;margin-bottom:8px}
+footer{background:#050c1d;color:#aebbd0;text-align:center;padding:30px}
+@media(max-width:800px){nav{display:none}.hero-in,.cards,.info{grid-template-columns:1fr}.monitor{display:none}.form{flex-direction:column}.form button{padding:13px}}
+</style>
+
+<style>
+/* Identidad visual basada en la paleta proporcionada */
+body {
+    background: #FADEF2;
+}
+header {
+    background: linear-gradient(135deg, #743065, #5C4C88);
+}
+.hero {
+    background:
+        radial-gradient(circle at 85% 20%, rgba(223,153,230,.55), transparent 28%),
+        linear-gradient(135deg, #743065, #5C4C88 58%, #C45E91);
+}
+.hero h2 span { color: #DF99E6; }
+.logo-icon { background: #C45E91; }
+.theme-btn { background: rgba(223,153,230,.20); }
+.btn-primary { color: #743065; }
+.btn-primary:hover { background: #DF99E6; color: #321B38; }
+.btn-outline:hover { background: rgba(223,153,230,.16); }
+.diagnostic-card {
+    box-shadow: 0 12px 30px rgba(116,48,101,.12);
+}
+.diagnostic-card:hover {
+    transform: translateY(-4px);
+    transition: .25s ease;
+    border-color: #C45E91;
+}
+.bios-icon { background: #EBD3EE; }
+.bsod-icon { background: #F3D5E5; }
+.search-area {
+    box-shadow: 0 12px 30px rgba(116,48,101,.12);
+}
+.search-form input:focus { border-color: #C45E91; }
+.search-form button, .btn[style*="background:#2563eb"] {
+    background: #5C4C88 !important;
+}
+.search-form button:hover { background: #743065 !important; }
+.quick-codes .code-btn:hover {
+    border-color: #C45E91;
+    color: #743065;
+}
+.solution {
+    border-left-color: #C45E91;
+}
+.database {
+    background: linear-gradient(135deg, #321B38, #5C4C88);
+}
+th { color: #DF99E6; }
+.info-card:hover {
+    border-color: #C45E91;
+    transform: translateY(-3px);
+    transition: .25s ease;
+}
+footer {
+    background: #321B38;
+}
+
+/* Sección de contacto */
+.contact-section {
+    background: linear-gradient(135deg, #FADEF2, #EBD3EE);
+}
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+.contact-card {
+    background: white;
+    border: 1px solid #e1d2e5;
+    border-radius: 18px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(116,48,101,.10);
+}
+.contact-icon {
+    font-size: 38px;
+    margin-bottom: 12px;
+}
+.contact-card h3 {
+    color: #743065;
+    margin-bottom: 7px;
+}
+.contact-card p {
+    color: #69758b;
+    word-break: break-word;
+}
+.contact-card a {
+    color: #5C4C88;
+    text-decoration: none;
+    font-weight: bold;
+}
+.contact-card a:hover {
+    color: #743065;
+    text-decoration: underline;
+}
+@media(max-width:800px) {
+    .contact-grid { grid-template-columns: 1fr; }
+}
+
+
+.info .card a {
+    color: #5C4C88;
+    font-weight: bold;
+    text-decoration: none;
+}
+.info .card a:hover {
+    color: #743065;
+    text-decoration: underline;
+}
+
+</style>
+
+</head>
+<body>
+
+<header>
+<div class="nav">
+<div class="logo"><span style="font-size:30px">🖥️</span><div><b>TWICE</b><small>Diagnóstico de fallas informáticas a tu servicio</small></div></div>
+<nav><a href="#inicio">Inicio</a><a href="#diagnostico">Diagnóstico</a><a href="#codigos">Códigos</a><a href="#info">Programas</a><a href="#contacto">Contacto</a></nav>
+<button class="btn" onclick="tema()">🌙</button>
+</div>
+</header>
+
+<section class="hero" id="inicio">
+<div class="hero-in">
+<div>
+<h1>Diagnostica tu PC <span>de forma rápida.</span></h1>
+<p>Identifica problemas comunes mediante los pitidos de la BIOS y los códigos de error de las pantallas azules de Windows (BSOD).</p>
+<a class="btn primary" href="#diagnostico">🔍 Comenzar diagnóstico</a>
+</div>
+<div class="monitor"><div>💻</div><h2>TWICE</h2><p>Encuentra posibles causas y soluciones.</p></div>
+</div>
+</section>
+
+<section id="diagnostico">
+<div class="container">
+<div class="title"><h2>¿Qué problema presenta tu computadora?</h2><p>Selecciona un tipo de diagnóstico o utiliza el buscador.</p></div>
+<div class="cards">
+<div class="card"><div class="icon">🔊</div><h3>Pitidos de la BIOS</h3><p>Consulta secuencias de pitidos que pueden indicar problemas de hardware como memoria RAM o procesador.</p><button class="btn blue" onclick="tipo('bios')">Analizar pitidos</button></div>
+<div class="card"><div class="icon">💙</div><h3>Códigos BSOD</h3><p>Introduce el código de la pantalla azul de Windows para conocer su significado y recomendaciones.</p><button class="btn red" onclick="tipo('bsod')">Analizar BSOD</button></div>
+</div>
+
+<div class="search">
+<div class="title" style="margin-bottom:20px"><h2>🔎 Buscar un error</h2><p>Ejemplos: 3 pitidos, MEMORY_MANAGEMENT o CRITICAL_PROCESS_DIED.</p></div>
+<div class="form"><input id="q" placeholder="Escribe un código o secuencia de pitidos..." onkeydown="if(event.key==='Enter')buscar()"><button class="btn blue" onclick="buscar()">Buscar</button></div>
+<div class="quick">
+<button onclick="poner('1 pitido')">1 pitido</button><button onclick="poner('3 pitidos')">3 pitidos</button><button onclick="poner('5 pitidos')">5 pitidos</button><button onclick="poner('MEMORY_MANAGEMENT')">MEMORY_MANAGEMENT</button><button onclick="poner('PAGE_FAULT_IN_NONPAGED_AREA')">PAGE_FAULT_IN_NONPAGED_AREA</button><button onclick="poner('CRITICAL_PROCESS_DIED')">CRITICAL_PROCESS_DIED</button>
+</div>
+<div class="result" id="resultado"><div class="rhead"><h3 id="titulo"></h3><span class="tag" id="nivel"></span></div><div class="rbody"><p><b>Tipo:</b> <span id="tipo"></span></p><p><b>Significado:</b> <span id="significado"></span></p><div class="solution"><b>🛠️ Recomendaciones</b><ul id="solucion"></ul></div><button class="btn" style="margin-top:16px;background:#172033;color:white" onclick="copiar()">📋 Copiar diagnóstico</button></div></div>
+</div>
+</div>
+</section>
+
+<section class="database" id="codigos">
+<div class="container">
+<div class="title"><h2>📋 Códigos frecuentes</h2><p>Referencias iniciales para el diagnóstico.</p></div>
+<div class="table-wrap"><table><thead><tr><th>Código</th><th>Tipo</th><th>Posible problema</th><th>Nivel</th></tr></thead><tbody>
+<tr><td>1 pitido</td><td><span class="badge bios">BIOS</span></td><td>Arranque normal en determinados sistemas</td><td>Normal</td></tr>
+<tr><td>3 pitidos</td><td><span class="badge bios">BIOS</span></td><td>Posible problema con la memoria RAM</td><td>Medio</td></tr>
+<tr><td>5 pitidos</td><td><span class="badge bios">BIOS</span></td><td>Posible problema relacionado con el procesador</td><td>Alto</td></tr>
+<tr><td>MEMORY_MANAGEMENT</td><td><span class="badge bsod">BSOD</span></td><td>Problemas relacionados con la memoria</td><td>Alto</td></tr>
+<tr><td>PAGE_FAULT_IN_NONPAGED_AREA</td><td><span class="badge bsod">BSOD</span></td><td>Memoria o controladores</td><td>Alto</td></tr>
+<tr><td>CRITICAL_PROCESS_DIED</td><td><span class="badge bsod">BSOD</span></td><td>Proceso crítico de Windows detenido</td><td>Crítico</td></tr>
+</tbody></table></div>
+</div>
+</section>
+
+<section id="info">
+<div class="container">
+<div class="title"><h2>📚 Programas</h2><p>Programas básicos para comprender los diagnósticos.</p></div>
+<div class="info">
+<div class="card"><div class="num">💿</div><h3>CrystalDiskInfo</h3><p>CrystalDiskInfo es un software gratuito para Windows que monitorea la salud y temperatura de tus discos duros (HDD) <a href="https://crystalmark.info/en/software/crystaldiskinfo/" target="_blank" rel="noopener">Visitar página oficial</a>.</p></div>
+<div class="card"><div class="num">💙</div><h3>MemTest64</h3><p>MemTest64 es un programa gratuito que prueba la estabilidad de tu memoria RAM en Windows para detectar fallas. <a href="https://www.techpowerup.com/memtest64/" target="_blank" rel="noopener">Visitar página oficial</a>.</p></div>
+<div class="card"><div class="num">⚙️</div><h3>CPU-Z</h3><p>CPU-Z es un programa gratuito que muestra información detallada sobre los componentes clave de tu PC, como el procesador, la memoria RAM y la placa madre. <a href="https://www.cpuid.com/softwares/cpu-z.html" target="_blank" rel="noopener">Visitar página oficial</a>.</p></div>
+</div>
+</div>
+</section>
+
+
+<section class="contact-section" id="contacto">
+    <div class="container">
+        <div class="title">
+            <h2>📞 Contáctanos</h2>
+            <p>Estamos disponibles para brindarte información sobre nuestro proyecto.</p>
+        </div>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="contact-icon">📱</div>
+                <h3>Teléfono</h3>
+                <p><a href="tel:+51970414432">+51 970 414 432</a></p>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">📍</div>
+                <h3>Lugar</h3>
+                <p>I.E. 3043 Ramón Castilla</p>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">📸</div>
+                <h3>Instagram</h3>
+                <p><a href="https://www.instagram.com/Tw_ic_e38" target="_blank" rel="noopener">@Twice_rc</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer><b><TWICE></b> — Herramienta educativa de diagnóstico informático.<br><small>© 2026 Proyecto académico I.E. 3043 Ramon Castilla</small></footer>
+
+<script>
+const datos={
+"1 pitido":{t:"1 pitido",tipo:"BIOS",n:"Normal",s:"En muchos sistemas, un solo pitido corto puede indicar que la comprobación inicial fue satisfactoria.",r:["Si el equipo inicia normalmente, no es necesario realizar ninguna acción.","Si existe otro problema, consulta el manual específico de la placa base.","Los códigos pueden variar según el fabricante."]},
+"3 pitidos":{t:"3 pitidos",tipo:"BIOS",n:"Medio",s:"Una secuencia de tres pitidos puede estar relacionada con problemas de memoria RAM en determinados sistemas.",r:["Apaga completamente el equipo.","Comprueba que los módulos de RAM estén correctamente instalados.","Prueba los módulos uno por uno si es posible.","Consulta el manual de la placa base."]},
+"5 pitidos":{t:"5 pitidos",tipo:"BIOS",n:"Alto",s:"En algunas BIOS, cinco pitidos pueden estar relacionados con un problema del procesador o de la inicialización del hardware.",r:["Apaga el equipo y desconecta la alimentación.","Comprueba las conexiones internas.","Verifica la refrigeración del procesador.","Consulta la documentación de la placa base."]},
+"memory_management":{t:"MEMORY_MANAGEMENT",tipo:"BSOD",n:"Alto",s:"Windows detectó un problema relacionado con la gestión de memoria.",r:["Ejecuta el diagnóstico de memoria de Windows.","Comprueba la memoria RAM.","Actualiza los controladores.","Instala las actualizaciones pendientes de Windows."]},
+"page_fault_in_nonpaged_area":{t:"PAGE_FAULT_IN_NONPAGED_AREA",tipo:"BSOD",n:"Alto",s:"El sistema encontró un acceso no válido relacionado con una zona de memoria.",r:["Comprueba la memoria RAM.","Actualiza controladores recientemente instalados.","Comprueba el almacenamiento.","Ejecuta herramientas de diagnóstico de Windows."]},
+"critical_process_died":{t:"CRITICAL_PROCESS_DIED",tipo:"BSOD",n:"Crítico",s:"Un proceso crítico de Windows terminó inesperadamente.",r:["Reinicia y comprueba si el error vuelve a aparecer.","Instala las actualizaciones disponibles.","Comprueba los archivos del sistema.","Revisa controladores instalados recientemente."]}
+};
+function poner(x){document.getElementById('q').value=x;buscar()}
+function buscar(){
+let q=document.getElementById('q').value.trim().toLowerCase(),d=datos[q];
+if(!d){for(let k in datos)if(k.includes(q)||datos[k].t.toLowerCase().includes(q)){d=datos[k];break}}
+let box=document.getElementById('resultado');box.style.display='block';
+if(!d){document.getElementById('titulo').textContent='❓ Código no encontrado';document.getElementById('nivel').textContent='Consultar';document.getElementById('tipo').textContent='No identificado';document.getElementById('significado').textContent="No se encontró información para '"+q+"'. El significado de los pitidos puede variar según el fabricante.";document.getElementById('solucion').innerHTML='<li>Consulta el manual de la placa base.</li><li>Comprueba que el código esté escrito correctamente.</li>';return}
+document.getElementById('titulo').textContent='🔎 '+d.t;document.getElementById('nivel').textContent=d.n;document.getElementById('tipo').textContent=d.tipo;document.getElementById('significado').textContent=d.s;document.getElementById('solucion').innerHTML=d.r.map(x=>'<li>'+x+'</li>').join('');
+}
+function tipo(x){let i=document.getElementById('q');i.placeholder=x==='bios'?'Ejemplo: 1 pitido, 3 pitidos, 5 pitidos...':'Ejemplo: MEMORY_MANAGEMENT...';i.focus();document.querySelector('.search').scrollIntoView({behavior:'smooth',block:'center'})}
+function copiar(){let txt=document.getElementById('titulo').innerText+"\nTipo: "+document.getElementById('tipo').innerText+"\nSignificado: "+document.getElementById('significado').innerText+"\nRecomendaciones:\n"+document.getElementById('solucion').innerText;navigator.clipboard.writeText(txt);alert('Diagnóstico copiado.')}
+function tema(){document.body.classList.toggle('dark')}
+</script>
+</body>
+</html>
